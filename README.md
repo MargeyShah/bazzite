@@ -39,9 +39,22 @@ Flatpak-first, no host `dnf`/`copr`:
     `~/homebrew/plugins`): CSS Loader, SteamGridDB, ProtonDB Badges, HLTB for
     Deck, TabMaster, PlayCount, IsThereAnyDeal for Deck, Decky LSFG-VK,
     AutoFlatpaks, Decky Terminal, Audio Loader, Game Theme Music, Quick Launch,
-    Volume Mixer. No config is synced between machines.
-- **`rpm-ostree`** — `podman-docker` only (the single rpm exception; Bazzite
-  ships Podman, this makes the `docker` CLI target it — no Docker daemon).
+    Volume Mixer, EmuDecky, MusicControl. No config is synced between machines.
+- **System extras** (host, not baked in; installed automatically by the
+  bootstrap, skip with `--no-extras`) — applied via Bazzite's own targets:
+  - **Proton Plus** — `ujust get-protonplus` (flatpak)
+  - **Sunshine** — `ujust setup-sunshine enable-flatpak` (flatpak)
+  - **Wake-on-LAN** — `ujust wol enable`
+  - **Boot to Windows from Steam** — `ujust setup-boot-windows-steam`
+  - **Virtualization** — `ujust setup-virtualization virt-on` (virt-manager + libvirtd; reboot)
+  - **Input group** — `ujust add-user-to-input-group add`
+  - **CoolerControl** — `ujust install-coolercontrol install` (**layers rpm**; reboot)
+  - **LM Studio** + **VSCodium** — Homebrew casks (`ublue-os/tap`)
+  - **Android Platform Tools** (adb/fastboot) — inside the Distrobox
+- **`rpm-ostree`** — `podman-docker` only, baked at build time (Bazzite ships
+  Podman; this makes the `docker` CLI target it — no Docker daemon). The only
+  other rpm layering anywhere is CoolerControl (`ujust install-coolercontrol`,
+  applied post-install, not baked).
 - **`files`** — `files/system/*` copied into the image root.
 - **`signing`** — cosign signing policy.
 

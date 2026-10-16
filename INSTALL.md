@@ -112,13 +112,18 @@ The custom image bakes in the flatpaks and config, but the CLI toolchain
 (Distrobox) and dotfiles are applied by the bootstrap:
 
 ```bash
-git clone git@github.com:MargeyShah/dotfiles.git ~/.scripts
+git clone https://github.com/MargeyShah/dotfiles.git ~/.scripts
 ~/.scripts/setup/fresh_install_bazzite.sh
 ```
 
+> The clone uses **HTTPS** (the repo is public) — there's no SSH key on a fresh
+> install yet; the bootstrap generates one and configures git signing.
+
 This installs GUI apps as flatpaks, Helium/Sidra as AppImages, the Ubuntu
 Distrobox toolchain (default terminal), the gaming extras (EmuDeck, Decky
-Loader + plugins), and symlinks the dotfiles. See the
+Loader + plugins), the system extras (Proton Plus, Sunshine, Wake-on-LAN,
+Boot-to-Windows, Virtualization, input group, CoolerControl, LM Studio,
+VSCodium, Android platform tools), and symlinks the dotfiles. See the
 [dotfiles repo](https://github.com/MargeyShah/dotfiles) for details.
 
 ## 8. Updating from here on
