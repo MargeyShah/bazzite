@@ -30,10 +30,13 @@ Flatpak-first, no host `dnf`/`copr`:
   bootstrap, skip with `--no-gaming`):
   - **EmuDeck** — `ujust get-emudeck install`
   - **Decky Loader** — `ujust setup-decky install`
+  - **Bazzite Buddy** — `ujust get-decky-bazzite-buddy install` (not in the
+    store; installed via its ujust recipe)
   - **Decky plugins** (from the Decky store, hash-verified, into
     `~/homebrew/plugins`): CSS Loader, SteamGridDB, ProtonDB Badges, HLTB for
-    Deck, TabMaster, PlayCount, IsThereAnyDeal for Deck, Decky LSFG-VK. No
-    config is synced between machines.
+    Deck, TabMaster, PlayCount, IsThereAnyDeal for Deck, Decky LSFG-VK,
+    AutoFlatpaks, Decky Terminal, Audio Loader, Game Theme Music, Quick Launch,
+    Volume Mixer. No config is synced between machines.
 - **`rpm-ostree`** — `podman-docker` only (the single rpm exception; Bazzite
   ships Podman, this makes the `docker` CLI target it — no Docker daemon).
 - **`files`** — `files/system/*` copied into the image root.
