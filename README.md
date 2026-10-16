@@ -20,7 +20,8 @@ Flatpak-first, no host `dnf`/`copr`:
 
 - **`default-flatpaks`** — system GUI apps from Flathub: Element, VS Code,
   **Signal Desktop**, Vesktop, Plexamp, osu! (lazer), Ludusavi, Heroic Games
-  Launcher, and Gear Lever (the AppImage manager). Apps without a Flathub
+  Launcher, Gear Lever (the AppImage manager), **Prism Launcher**, **Cemu**,
+  **RPCS3**, **Dolphin**, and **XIVLauncher**. Apps without a Flathub
   package — **Helium browser** and **Sidra** — are installed as AppImages by the
   bootstrap script and integrated with Gear Lever. (**Playnite** is intentionally
   omitted: it has no Linux build; Steam Game Mode + Heroic + Ludusavi cover those
