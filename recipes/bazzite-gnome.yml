@@ -6,5 +6,26 @@ description: MargeyShah personal Bazzite image (GNOME desktop).
 base-image: ghcr.io/ublue-os/bazzite-gnome
 image-version: stable
 
+# Policy: FLATPAK-FIRST. GUI apps ship as system flatpaks; the host is never
+# modified with dnf/copr. `podman-docker` is the single deliberate rpm exception
+# (a compat shim so the `docker` CLI targets Podman; Bazzite ships Podman).
 modules:
-  - from-file: common.yml
+  - type: rpm-ostree
+    install:
+      - podman-docker
+
+  - type: default-flatpaks
+    configurations:
+      - notify: true
+        scope: system
+        install:
+          - im.riot.Riot          # Element
+          - com.visualstudio.code # Visual Studio Code
+      - scope: user # Flathub user repo, no user packages forced
+
+  - type: files
+    files:
+      - source: system
+        destination: /
+
+  - type: signing

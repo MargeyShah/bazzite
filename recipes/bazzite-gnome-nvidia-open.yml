@@ -6,5 +6,24 @@ description: MargeyShah personal Bazzite image (GNOME desktop, NVIDIA open).
 base-image: ghcr.io/ublue-os/bazzite-gnome-nvidia-open
 image-version: stable
 
+# Flatpak-first; podman-docker is the single rpm exception. See bazzite-gnome.yml.
 modules:
-  - from-file: common.yml
+  - type: rpm-ostree
+    install:
+      - podman-docker
+
+  - type: default-flatpaks
+    configurations:
+      - notify: true
+        scope: system
+        install:
+          - im.riot.Riot          # Element
+          - com.visualstudio.code # Visual Studio Code
+      - scope: user
+
+  - type: files
+    files:
+      - source: system
+        destination: /
+
+  - type: signing
