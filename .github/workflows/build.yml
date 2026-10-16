@@ -17,7 +17,9 @@ concurrency:
 jobs:
   bluebuild:
     name: Build Custom Image
-    runs-on: ubuntu-latest
+    # Pinned (not ubuntu-latest) to avoid the upcoming -latest migration and to
+    # match the image upstream Bazzite builds on.
+    runs-on: ubuntu-26.04
     permissions:
       contents: read
       packages: write
