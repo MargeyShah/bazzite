@@ -22,11 +22,11 @@ it keeps pulling Bazzite's own updates — you just get the extra baked-in confi
 Flatpak-first, no host `dnf`/`copr`:
 
 - **`default-flatpaks`** — system GUI apps from Flathub: Element, VS Code,
-  **Signal Desktop**, Vesktop, Plexamp, osu! (lazer), Ludusavi, Heroic Games
-  Launcher, Gear Lever (the AppImage manager), **Prism Launcher**, **Cemu**,
-  **RPCS3**, **Dolphin**, and **XIVLauncher**. Apps without a Flathub
-  package — **Helium browser** and **Sidra** — are installed as AppImages by the
-  bootstrap script and integrated with Gear Lever. (**Playnite** is intentionally
+  **Signal Desktop**, Vesktop, Plexamp, **Hidamari** (video wallpaper), osu!
+  (lazer), Ludusavi, Heroic Games Launcher, Gear Lever (the AppImage manager),
+  **Prism Launcher**, **Cemu**, **RPCS3**, **Dolphin**, and **XIVLauncher**.
+  Apps without a Flathub package — **Helium browser** and **Sidra** — are
+  installed as AppImages by the bootstrap script and integrated with Gear Lever. (**Playnite** is intentionally
   omitted: it has no Linux build; Steam Game Mode + Heroic + Ludusavi cover those
   roles.)
 - **Gaming extras** (host, not baked in; installed automatically by the

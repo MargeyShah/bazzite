@@ -24,6 +24,7 @@ modules:
           - org.signal.Signal            # Signal Desktop
           - dev.vencord.Vesktop            # Vesktop (Discord)
           - com.plexamp.Plexamp            # Plexamp
+          - io.github.jeffshee.Hidamari      # Hidamari (video wallpaper)
           - sh.ppy.osu                     # osu! (lazer)
           - com.github.mtkennerly.ludusavi # Ludusavi (save backups)
           - com.heroicgameslauncher.hgl    # Heroic Games Launcher
