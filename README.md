@@ -58,6 +58,26 @@ After rebasing, run the dotfiles bootstrap on the host:
 ~/.scripts/setup/fresh_install_bazzite.sh
 ```
 
+## Tags
+
+BlueBuild emits this tag set on every build (this is BlueBuild's convention, not
+Bazzite's `stable`/`testing`/`unstable` branch tags):
+
+| Tag | Meaning | Use |
+| --- | --- | --- |
+| `latest` | newest build of this variant | **primary rebase target** |
+| `YYYMMDD` | build date | pinning / rollback |
+| `44` | Fedora major only | stream pin |
+| `YYYMMDD-44` | build date + Fedora | rollback |
+| `<sha>-44` | git commit + Fedora | exact reproducible pin |
+
+`latest` plays the same role as Bazzite's `stable`/`latest` "rebase me" float.
+There is intentionally no `stable`/`testing`/`unstable` tag here — those come
+from Bazzite's own git branches, which this repo does not have.
+
+`<sha256-*.sig>` entries you may see in `tags/list` are internal cosign
+signature layers, not image tags.
+
 ## Verify
 
 ```bash
@@ -69,3 +89,15 @@ cosign verify --key cosign.pub ghcr.io/margeyshah/bazzite-gnome
 Updates flow automatically: each daily build re-derives from the latest upstream
 Bazzite, and your machine picks it up through the normal `rpm-ostree`/`uupd`
 update path (`ujust update`).
+
+Because the recipes use a floating `image-version: stable`, every daily build
+re-tracks upstream Bazzite's newest stable — the same effect a source fork kept
+in sync with the pull app would give, without maintaining a fork.
+
+## Not a fork
+
+This repo does **not** fork [`ublue-os/bazzite`](https://github.com/ublue-os/bazzite).
+It is a [BlueBuild](https://bluebuild.org) image repo that pulls Bazzite as its
+`base-image`. Bazzite's "fork me + use the pull app" advice targets forks of
+their own buildah-based build system; a BlueBuild repo is the lighter-weight,
+recommended way to derive a personal image and needs no source fork.
