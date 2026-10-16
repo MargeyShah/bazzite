@@ -21,6 +21,12 @@ modules:
         install:
           - im.riot.Riot          # Element
           - com.visualstudio.code # Visual Studio Code
+          - dev.vencord.Vesktop            # Vesktop (Discord)
+          - com.plexamp.Plexamp            # Plexamp
+          - sh.ppy.osu                     # osu! (lazer)
+          - com.github.mtkennerly.ludusavi # Ludusavi (save backups)
+          - com.heroicgameslauncher.hgl    # Heroic Games Launcher
+          - it.mijorus.gearlever           # Gear Lever (AppImage manager)
       - scope: user # Flathub user repo, no user packages forced
 
   - type: files

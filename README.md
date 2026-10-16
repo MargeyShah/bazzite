@@ -18,7 +18,12 @@ it keeps pulling Bazzite's own updates — you just get the extra baked-in confi
 
 Flatpak-first, no host `dnf`/`copr`:
 
-- **`default-flatpaks`** — system GUI apps from Flathub (Element, VS Code).
+- **`default-flatpaks`** — system GUI apps from Flathub: Element, VS Code,
+  Vesktop, Plexamp, osu! (lazer), Ludusavi, Heroic Games Launcher, and Gear
+  Lever (the AppImage manager). Apps without a Flathub package — **Helium
+  browser** and **Sidra** — are installed as AppImages by the bootstrap script
+  and integrated with Gear Lever. (**Playnite** is intentionally omitted: it has
+  no Linux build; Steam Game Mode + Heroic + Ludusavi cover those roles.)
 - **`rpm-ostree`** — `podman-docker` only (the single rpm exception; Bazzite
   ships Podman, this makes the `docker` CLI target it — no Docker daemon).
 - **`files`** — `files/system/*` copied into the image root.
