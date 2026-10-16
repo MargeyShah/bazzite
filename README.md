@@ -26,9 +26,14 @@ Flatpak-first, no host `dnf`/`copr`:
   bootstrap script and integrated with Gear Lever. (**Playnite** is intentionally
   omitted: it has no Linux build; Steam Game Mode + Heroic + Ludusavi cover those
   roles.)
-- **Gaming extras** (opt-in, host, not baked in): **EmuDeck**
-  (`ujust get-emudeck install`) and **Decky Loader** (`ujust setup-decky
-  install`) via Bazzite's own targets.
+- **Gaming extras** (host, not baked in; installed automatically by the
+  bootstrap, skip with `--no-gaming`):
+  - **EmuDeck** — `ujust get-emudeck install`
+  - **Decky Loader** — `ujust setup-decky install`
+  - **Decky plugins** (from the Decky store, hash-verified, into
+    `~/homebrew/plugins`): CSS Loader, SteamGridDB, ProtonDB Badges, HLTB for
+    Deck, TabMaster, PlayCount, IsThereAnyDeal for Deck, Decky LSFG-VK. No
+    config is synced between machines.
 - **`rpm-ostree`** — `podman-docker` only (the single rpm exception; Bazzite
   ships Podman, this makes the `docker` CLI target it — no Docker daemon).
 - **`files`** — `files/system/*` copied into the image root.
