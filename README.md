@@ -86,11 +86,26 @@ cosign verify --key cosign.pub ghcr.io/margeyshah/bazzite-gnome
 
 ## Updating
 
-Updates flow automatically: each daily build re-derives from the latest upstream
-Bazzite, and your machine picks it up through the normal `rpm-ostree`/`uupd`
-update path (`ujust update`).
+Updates happen in two hops, fully automatic:
 
-Because the recipes use a floating `image-version: stable`, every daily build
+```
+Bazzite publishes a new stable  →  this repo rebuilds & re-tags :latest  →  your host runs `ujust update`
+```
+
+- **Keeping up with upstream.** Two mechanisms:
+  1. **Scheduled build** (`.github/workflows/build.yml`, daily 06:00 UTC) —
+     re-derives every variant from the floating `image-version: stable`.
+  2. **Event-driven rebuild** (`.github/workflows/upstream-check.yml`, hourly) —
+     compares upstream Bazzite's `:stable` *index digest* against the
+     `org.opencontainers.image.base.digest` label on our published image; if
+     upstream moved, it immediately dispatches a rebuild. So you track upstream
+     within ~an hour instead of waiting for the next daily cron.
+- **On the host.** `ujust update` (Bazzite's updater: OS + flatpaks + Distrobox
+  containers) works unchanged against the rebased `:latest` image and picks up
+  each newly published build. No host-side changes are needed after the initial
+  rebase.
+
+Because the recipes use a floating `image-version: stable`, every rebuild
 re-tracks upstream Bazzite's newest stable — the same effect a source fork kept
 in sync with the pull app would give, without maintaining a fork.
 

@@ -1,0 +1,80 @@
+name: upstream-check
+
+# Event-driven upstream tracking: instead of only relying on the daily build
+# cron, this checks hourly whether upstream Bazzite's `:stable` digest has moved
+# away from the digest our published image was built from, and if so triggers a
+# rebuild immediately.
+#
+# How the comparison works: every built image carries the OCI label
+# `org.opencontainers.image.base.digest` (the upstream *index* digest it was
+# built from). We compare that against the current upstream `:stable` digest.
+# `crane digest` returns the tag's index digest, which is exactly what the label
+# stores, so a match means "up to date" and a mismatch means "upstream moved".
+
+on:
+  schedule:
+    - cron: "0 * * * *" # hourly
+  workflow_dispatch:
+
+concurrency:
+  group: upstream-check
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  actions: write # needed to dispatch the build workflow
+
+jobs:
+  check:
+    name: Check upstream digests
+    runs-on: ubuntu-26.04
+    steps:
+      - name: Install crane
+        run: |
+          set -euo pipefail
+          CRANE_VERSION=v0.22.1
+          curl -fsSL \
+            "https://github.com/google/go-containerregistry/releases/download/${CRANE_VERSION}/go-containerregistry_Linux_x86_64.tar.gz" \
+            | sudo tar -xzf - -C /usr/local/bin crane
+          crane version
+
+      - name: Compare upstream vs built-from digests
+        id: cmp
+        run: |
+          set -euo pipefail
+          images=(
+            bazzite-gnome
+            bazzite-gnome-nvidia-open
+            bazzite-deck-gnome
+            bazzite-deck-nvidia-gnome
+          )
+          stale=()
+          for name in "${images[@]}"; do
+            upstream="$(crane digest "ghcr.io/ublue-os/${name}:stable" || true)"
+            built="$(crane config "ghcr.io/margeyshah/${name}:latest" \
+              | jq -r '.config.Labels["org.opencontainers.image.base.digest"] // empty' || true)"
+            printf '%-28s upstream=%s built_from=%s\n' "$name" "${upstream:-none}" "${built:-none}"
+            if [ -n "$upstream" ] && [ "$upstream" != "$built" ]; then
+              stale+=("$name")
+            fi
+          done
+          if [ "${#stale[@]}" -gt 0 ]; then
+            echo "Upstream moved for: ${stale[*]}"
+            echo "stale=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "All images are up to date with upstream Bazzite stable."
+            echo "stale=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Trigger build
+        if: steps.cmp.outputs.stale == 'true'
+        run: |
+          set -euo pipefail
+          echo "Dispatching build.yml..."
+          curl -fsS -X POST \
+            -H "Authorization: Bearer ${{ github.token }}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/build.yml/dispatches" \
+            -d '{"ref":"main"}'
+          echo "Build dispatched."
