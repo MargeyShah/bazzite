@@ -5,6 +5,9 @@ Personal [BlueBuild](https://bluebuild.org) images derived from upstream
 variant. Each image is a thin layer on top of upstream Bazzite, so rebasing to
 it keeps pulling Bazzite's own updates — you just get the extra baked-in config.
 
+> **Installing from scratch?** See **[INSTALL.md](INSTALL.md)** (download stock
+> Bazzite → Ventoy/USB → install → rebase onto this image → bootstrap).
+
 ## Variants
 
 | Recipe | Base image | Image |
@@ -44,7 +47,9 @@ Flatpak-first, no host `dnf`/`copr`:
 
 The apt-based CLI toolchain (rust/cargo, nvm, pyenv, starship, fzf, nvim, etc.)
 is **not** baked in. On the Bazzite host it lives in an Ubuntu Distrobox created
-by the dotfiles bootstrap (`setup/fresh_install_bazzite.sh` in the dotfiles repo).
+by the dotfiles bootstrap
+([`setup/fresh_install_bazzite.sh`](https://github.com/MargeyShah/dotfiles) in the
+[dotfiles repo](https://github.com/MargeyShah/dotfiles)).
 
 ## Build
 
@@ -55,7 +60,8 @@ private key). The public key is committed as `cosign.pub`.
 ## Rebase a machine onto your image
 
 Rebase once to the unsigned image to pull in the signing keys/policy, reboot,
-then rebase to the signed image:
+then rebase to the signed image (see [INSTALL.md](INSTALL.md) for the full
+from-scratch walkthrough):
 
 ```bash
 # 1. unsigned image (installs the signing policy)
@@ -70,9 +76,11 @@ systemctl reboot
 Swap `bazzite-gnome` for `bazzite-gnome-nvidia-open`, `bazzite-deck-gnome`, or
 `bazzite-deck-nvidia-gnome` as appropriate.
 
-After rebasing, run the dotfiles bootstrap on the host:
+After rebasing, run the dotfiles bootstrap on the host
+([repo](https://github.com/MargeyShah/dotfiles)):
 
 ```bash
+git clone git@github.com:MargeyShah/dotfiles.git ~/.scripts
 ~/.scripts/setup/fresh_install_bazzite.sh
 ```
 
