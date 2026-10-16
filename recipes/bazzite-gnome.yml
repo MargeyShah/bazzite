@@ -1,0 +1,10 @@
+---
+# yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
+# GNOME desktop, no NVIDIA.
+name: bazzite-gnome
+description: MargeyShah personal Bazzite image (GNOME desktop).
+base-image: ghcr.io/ublue-os/bazzite-gnome
+image-version: stable
+
+modules:
+  - from-file: common.yml

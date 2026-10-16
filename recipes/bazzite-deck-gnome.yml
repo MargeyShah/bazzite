@@ -1,0 +1,10 @@
+---
+# yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
+# HTPC/handheld (gamescope + GNOME), no NVIDIA.
+name: bazzite-deck-gnome
+description: MargeyShah personal Bazzite image (deck + GNOME, HTPC).
+base-image: ghcr.io/ublue-os/bazzite-deck-gnome
+image-version: stable
+
+modules:
+  - from-file: common.yml

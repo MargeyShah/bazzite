@@ -1,0 +1,4 @@
+This file marks the MargeyShah custom Bazzite image.
+
+Anything under files/system/ is copied into the image root (/) at build time.
+Use it for static system files (fonts, /etc snippets, skel files, etc.).
