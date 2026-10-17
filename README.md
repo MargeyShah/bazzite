@@ -119,7 +119,15 @@ signature layers, not image tags.
 
 ## Verify
 
+`cosign.pub` lives in this repo, so either clone it first and run the command
+from the repo directory, or download just the key:
+
 ```bash
+# from a clone of this repo
+cosign verify --key cosign.pub ghcr.io/margeyshah/bazzite-gnome
+
+# or, without cloning
+curl -fsSL https://raw.githubusercontent.com/MargeyShah/bazzite/main/cosign.pub -o cosign.pub
 cosign verify --key cosign.pub ghcr.io/margeyshah/bazzite-gnome
 ```
 
@@ -147,11 +155,3 @@ Bazzite publishes a new stable  →  this repo rebuilds & re-tags :latest  →  
 Because the recipes use a floating `image-version: stable`, every rebuild
 re-tracks upstream Bazzite's newest stable — the same effect a source fork kept
 in sync with the pull app would give, without maintaining a fork.
-
-## Not a fork
-
-This repo does **not** fork [`ublue-os/bazzite`](https://github.com/ublue-os/bazzite).
-It is a [BlueBuild](https://bluebuild.org) image repo that pulls Bazzite as its
-`base-image`. Bazzite's "fork me + use the pull app" advice targets forks of
-their own buildah-based build system; a BlueBuild repo is the lighter-weight,
-recommended way to derive a personal image and needs no source fork.
