@@ -119,12 +119,19 @@ git clone https://github.com/MargeyShah/dotfiles.git ~/.scripts
 > The clone uses **HTTPS** (the repo is public) — there's no SSH key on a fresh
 > install yet; the bootstrap generates one and configures git signing.
 
-This installs GUI apps as flatpaks, Helium/Sidra as AppImages, the Ubuntu
-Distrobox toolchain (default terminal), the gaming extras (EmuDeck, Decky
-Loader + plugins), the system extras (Proton Plus, Sunshine, Wake-on-LAN,
-Boot-to-Windows, Virtualization, input group, CoolerControl, LM Studio,
-VSCodium, Android platform tools), and symlinks the dotfiles. See the
+The flatpaks, GNOME extensions, Element keyring override and desktop defaults
+are already baked into the image, so the bootstrap only adds what cannot live
+there: Helium/Sidra as AppImages (via Gear Lever), the Flameshot screenshot
+portal permission, the gaming extras (EmuDeck, Decky Loader + plugins), and the
+system extras (Proton Plus, Sunshine, Wake-on-LAN, Boot-to-Windows,
+Virtualization, input group, CoolerControl, LM Studio, VSCodium). The Ubuntu
+Distrobox is provisioned with `fresh_install.sh --profile dotfiles`, which also
+symlinks the dotfiles. See the
 [dotfiles repo](https://github.com/MargeyShah/dotfiles) for details.
+
+The bootstrap does **not** change your terminal. New terminals open a normal
+host shell; enter the container when you want it with
+`distrobox enter bazzite-ubuntu` (or run `box`).
 
 ## 8. Updating from here on
 

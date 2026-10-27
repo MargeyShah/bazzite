@@ -22,13 +22,23 @@ it keeps pulling Bazzite's own updates — you just get the extra baked-in confi
 Flatpak-first, no host `dnf`/`copr`:
 
 - **`default-flatpaks`** — system GUI apps from Flathub: Element, VS Code,
-  **Signal Desktop**, Vesktop, Plexamp, **Hidamari** (video wallpaper), osu!
-  (lazer), Ludusavi, Heroic Games Launcher, Gear Lever (the AppImage manager),
-  **Prism Launcher**, **Cemu**, **RPCS3**, **Dolphin**, and **XIVLauncher**.
-  Apps without a Flathub package — **Helium browser** and **Sidra** — are
-  installed as AppImages by the bootstrap script and integrated with Gear Lever. (**Playnite** is intentionally
-  omitted: it has no Linux build; Steam Game Mode + Heroic + Ludusavi cover those
-  roles.)
+  **Signal Desktop**, Plexamp, **Hidamari** (video wallpaper), osu! (lazer),
+  Ludusavi, Heroic Games Launcher, Gear Lever (the AppImage manager),
+  **Flameshot**, **Proton Plus**, **Sunshine**, **Prism Launcher**, **Cemu**,
+  **RPCS3**, **Dolphin**, and **XIVLauncher**. Apps without a Flathub package —
+  **Helium browser**, **Sidra**, **Ghostty** and **Vesktop** — are installed as
+  AppImages by the bootstrap script and integrated with Gear Lever.
+  (**Playnite** is intentionally omitted: it has no Linux build; Steam Game Mode
+  + Heroic + Ludusavi cover those roles.)
+- **`gnome-extensions`** — installs the extensions Bazzite does not ship:
+  **Deja Window**, **Hide Top Bar**, **Just Perfection**, **Mute All
+  Microphones**, **Native Dock**, **Quick Settings Audio Devices Hider** and
+  **Quick Settings Audio Devices Renamer** (pinned by e.g.o PK ID).
+- **`gschema-overrides`** — `files/gschema-overrides/zz1-margey-extensions.gschema.override`
+  default-enables the full extension set (Bazzite's own plus the five above),
+  so a fresh install needs no manual toggling;
+  `zz1-margey-desktop.gschema.override` sets the window-manager defaults
+  (`focus-new-windows='smart'`, `auto-raise=true`).
 - **Gaming extras** (host, not baked in; installed automatically by the
   bootstrap, skip with `--no-gaming`):
   - **EmuDeck** — `ujust get-emudeck install`
@@ -42,27 +52,31 @@ Flatpak-first, no host `dnf`/`copr`:
     Volume Mixer, EmuDecky, MusicControl. No config is synced between machines.
 - **System extras** (host, not baked in; installed automatically by the
   bootstrap, skip with `--no-extras`) — applied via Bazzite's own targets:
-  - **Proton Plus** — `ujust get-protonplus` (flatpak)
-  - **Sunshine** — `ujust setup-sunshine enable-flatpak` (flatpak)
   - **Wake-on-LAN** — `ujust wol enable`
   - **Boot to Windows from Steam** — `ujust setup-boot-windows-steam`
   - **Virtualization** — `ujust setup-virtualization virt-on` (virt-manager + libvirtd; reboot)
   - **Input group** — `ujust add-user-to-input-group add`
-  - **CoolerControl** — `ujust install-coolercontrol install` (**layers rpm**; reboot)
   - **LM Studio** + **VSCodium** — Homebrew casks (`ublue-os/tap`)
   - **Android Platform Tools** (adb/fastboot) — inside the Distrobox
-- **`rpm-ostree`** — `podman-docker` only, baked at build time (Bazzite ships
-  Podman; this makes the `docker` CLI target it — no Docker daemon). The only
-  other rpm layering anywhere is CoolerControl (`ujust install-coolercontrol`,
-  applied post-install, not baked).
-- **`files`** — `files/system/*` copied into the image root.
+- **`rpm-ostree`** — `podman-docker` (so the `docker` CLI targets Podman; no
+  Docker daemon) plus the **CoolerControl** stack (`liquidctl`,
+  `coolercontrol`), all baked at build time. Nothing is layered on the live
+  host any more; CoolerControl needs one reboot after rebasing.
+- **`files`** — `files/system/*` copied into the image root. That includes the
+  Element keyring override
+  (`/var/lib/flatpak/overrides/im.riot.Riot` → `talk-name=org.freedesktop.secrets`),
+  so the bootstrap does not need a per-user `flatpak override`.
 - **`signing`** — cosign signing policy.
 
 The apt-based CLI toolchain (rust/cargo, nvm, pyenv, starship, fzf, nvim, etc.)
 is **not** baked in. On the Bazzite host it lives in an Ubuntu Distrobox created
 by the dotfiles bootstrap
 ([`setup/fresh_install_bazzite.sh`](https://github.com/MargeyShah/dotfiles) in the
-[dotfiles repo](https://github.com/MargeyShah/dotfiles)).
+[dotfiles repo](https://github.com/MargeyShah/dotfiles).
+
+The bootstrap leaves the terminal alone: it writes no Ptyxis profile and no
+shell rc, so new terminals open a normal host shell. Enter the toolchain with
+`distrobox enter bazzite-ubuntu` (or run the dotfiles `box` picker).
 
 ## Build
 
