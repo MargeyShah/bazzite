@@ -6,11 +6,14 @@ description: MargeyShah personal Bazzite image (GNOME desktop, NVIDIA open).
 base-image: ghcr.io/ublue-os/bazzite-gnome-nvidia-open
 image-version: stable
 
-# Flatpak-first; podman-docker is the single rpm exception. See bazzite-gnome.yml.
+# Flatpak-first; rpm layers (podman-docker, CoolerControl) are build-time only.
+# See bazzite-gnome.yml.
 modules:
   - type: rpm-ostree
     install:
       - podman-docker
+      - liquidctl
+      - coolercontrol
 
   - type: default-flatpaks
     configurations:
@@ -20,19 +23,39 @@ modules:
           - im.riot.Riot          # Element
           - com.visualstudio.code # Visual Studio Code
           - org.signal.Signal            # Signal Desktop
-          - dev.vencord.Vesktop            # Vesktop (Discord)
           - com.plexamp.Plexamp            # Plexamp
           - io.github.jeffshee.Hidamari      # Hidamari (video wallpaper)
           - sh.ppy.osu                     # osu! (lazer)
           - com.github.mtkennerly.ludusavi # Ludusavi (save backups)
           - com.heroicgameslauncher.hgl    # Heroic Games Launcher
           - it.mijorus.gearlever           # Gear Lever (AppImage manager)
+          - org.flameshot.Flameshot        # Flameshot (screenshots)
+          - com.vysp3r.ProtonPlus         # Proton Plus (Proton/Wine manager)
+          - dev.lizardbyte.app.Sunshine   # Sunshine (game streaming host)
           - org.prismlauncher.PrismLauncher # Prism Launcher (Minecraft)
           - info.cemu.Cemu                 # Cemu (Wii U)
           - net.rpcs3.RPCS3                # RPCS3 (PS3)
           - org.DolphinEmu.dolphin-emu     # Dolphin (GameCube/Wii)
           - dev.goats.xivlauncher          # XIVLauncher (FFXIV)
       - scope: user
+
+  # GNOME Shell extensions (e.g.o PK IDs): the ones not shipped by Bazzite's
+  # system packages. Default-enabled by the gschema-overrides module below.
+  - type: gnome-extensions
+    install:
+      - 9024   # Deja Window
+      - 545    # Hide Top Bar
+      - 3843   # Just Perfection
+      - 10247  # Mute All Microphones
+      - 11144  # Native Dock
+      - 5964   # Quick Settings Audio Devices Hider
+      - 6000   # Quick Settings Audio Devices Renamer
+
+  # Default-enable the extension set (installed above + Bazzite's own).
+  - type: gschema-overrides
+    include:
+      - zz1-margey-extensions.gschema.override
+      - zz1-margey-desktop.gschema.override
 
   - type: files
     files:

@@ -1,0 +1,8 @@
+# Default-enabled GNOME Shell extensions for the MargeyShah images.
+#
+# Replaces Bazzite's own enabled-extensions list (zz0-03-...-extensions).
+# The `zz1-` prefix sorts after Bazzite's `zz0-*` overrides, so this wins.
+# Extensions themselves are installed by the gnome-extensions module in the
+# recipes; UUIDs here must match what is actually present in the image.
+[org.gnome.shell]
+enabled-extensions=['logomenu@aryan_k', 'appindicatorsupport@rgcjonas.gmail.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'gsconnect@andyholmes.github.io', 'blur-my-shell@aunetx', 'caffeine@patapon.info', 'add-to-steam@pupper.space', 'restartto@tiagoporsch.github.io', 'compiz-alike-magic-lamp-effect@hermes83.github.com', 'bazaar-integration@kolunmi.github.io', 'deja-window@mcast.gnomext.com', 'hidetopbar@mathieu.bidon.ca', 'just-perfection-desktop@just-perfection', 'mute-all-mics@VitalyOstanin', 'native-dock@mawi.ink', 'quicksettings-audio-devices-hider@marcinjahn.com', 'quicksettings-audio-devices-renamer@marcinjahn.com']

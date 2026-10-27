@@ -1,0 +1,4 @@
+# Desktop window-manager defaults for the MargeyShah images.
+[org.gnome.desktop.wm.preferences]
+focus-new-windows='smart'
+auto-raise=true
