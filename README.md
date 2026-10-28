@@ -60,8 +60,10 @@ Flatpak-first, no host `dnf`/`copr`:
   - **Android Platform Tools** (adb/fastboot) — inside the Distrobox
 - **`rpm-ostree`** — `podman-docker` (so the `docker` CLI targets Podman; no
   Docker daemon) plus the **CoolerControl** stack (`liquidctl`,
-  `coolercontrol`), all baked at build time. Nothing is layered on the live
-  host any more; CoolerControl needs one reboot after rebasing.
+  `coolercontrol`), all baked at build time. CoolerControl comes from the Terra
+  repo, so `files/rpm-ostree/terra.repo` enables it for the build (Bazzite ships
+  it disabled and only turns it on at runtime for `ujust`). Nothing is layered
+  on the live host any more; CoolerControl needs one reboot after rebasing.
 - **`files`** — `files/system/*` copied into the image root. That includes the
   Element keyring override
   (`/var/lib/flatpak/overrides/im.riot.Riot` → `talk-name=org.freedesktop.secrets`),

@@ -10,6 +10,8 @@ image-version: stable
 # See bazzite-gnome.yml.
 modules:
   - type: rpm-ostree
+    repos:
+      - terra.repo   # CoolerControl lives in Terra (files/rpm-ostree/terra.repo)
     install:
       - podman-docker
       - liquidctl

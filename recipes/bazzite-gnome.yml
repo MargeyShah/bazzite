@@ -13,6 +13,8 @@ image-version: stable
 # `ujust install-coolercontrol` on the live host.
 modules:
   - type: rpm-ostree
+    repos:
+      - terra.repo   # CoolerControl lives in Terra (files/rpm-ostree/terra.repo)
     install:
       - podman-docker
       - liquidctl
