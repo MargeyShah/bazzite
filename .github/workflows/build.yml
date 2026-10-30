@@ -15,8 +15,71 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
   cancel-in-progress: true
 jobs:
+  # Upstream movement is normally handled by upstream-check.yml (hourly, dispatch).
+  # The daily cron is the safety net for when that check fails or is disabled, so
+  # it must NOT skip merely because this commit was built before: it only skips
+  # when the commit is already built AND every published variant was built from
+  # the current upstream `stable` digest. Push / workflow_dispatch / PR runs are
+  # never skipped.
+  guard:
+    name: Skip if already built
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-26.04
+    permissions:
+      actions: read
+      contents: read
+    outputs:
+      skip: ${{ steps.check.outputs.skip }}
+    steps:
+      - name: Install crane
+        run: |
+          set -euo pipefail
+          CRANE_VERSION=v0.22.1
+          curl -fsSL \
+            "https://github.com/google/go-containerregistry/releases/download/${CRANE_VERSION}/go-containerregistry_Linux_x86_64.tar.gz" \
+            | sudo tar -xzf - -C /usr/local/bin crane
+          crane version
+
+      - name: Check commit and upstream freshness
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          already="$(gh run list \
+            --repo "${GITHUB_REPOSITORY}" \
+            --workflow build.yml \
+            --branch "${GITHUB_REF_NAME}" \
+            --status success \
+            --limit 50 \
+            --json headSha \
+            --jq "[.[].headSha] | index(\"${GITHUB_SHA}\") != null" 2>/dev/null || echo false)"
+
+          stale=no
+          for name in bazzite-gnome bazzite-gnome-nvidia bazzite-gnome-nvidia-open bazzite-deck-gnome bazzite-deck-nvidia-gnome; do
+            upstream="$(crane digest "ghcr.io/ublue-os/${name}:stable" || true)"
+            built="$(crane config "ghcr.io/margeyshah/${name}:latest" \
+              | jq -r '.config.Labels["org.opencontainers.image.base.digest"] // empty' || true)"
+            printf '%-28s upstream=%s built_from=%s\n' "$name" "${upstream:-none}" "${built:-none}"
+            if [ -n "$upstream" ] && [ "$upstream" != "$built" ]; then
+              stale=yes
+            fi
+          done
+
+          if [ "${already}" = "true" ] && [ "${stale}" = "no" ]; then
+            echo "Commit ${GITHUB_SHA} already built and all variants match upstream stable; skipping the scheduled rebuild."
+            echo "skip=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "Commit built: ${already} | upstream stale: ${stale} -> building."
+            echo "skip=false" >> "${GITHUB_OUTPUT}"
+          fi
+
   bluebuild:
     name: Build Custom Image
+    needs: guard
+    # Run unless the guard says this SHA is already built. `always()` keeps this
+    # job alive when the guard was skipped (push / dispatch / PR events).
+    if: always() && needs.guard.outputs.skip != 'true'
     # Pinned (not ubuntu-latest) to avoid the upcoming -latest migration and to
     # match the image upstream Bazzite builds on.
     runs-on: ubuntu-26.04
@@ -29,6 +92,7 @@ jobs:
       matrix:
         recipe:
           - bazzite-gnome.yml
+          - bazzite-gnome-nvidia.yml
           - bazzite-gnome-nvidia-open.yml
           - bazzite-deck-gnome.yml
           - bazzite-deck-nvidia-gnome.yml
