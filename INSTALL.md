@@ -13,12 +13,13 @@ download stock Bazzite ISO  →  flash to USB  →  install  →  rebase onto cu
 
 ## 1. Pick your variant
 
-| Hardware / desktop | Use image |
-| --- | --- |
-| Desktop/laptop, AMD/Intel GPU, GNOME | `bazzite-gnome` |
-| Desktop/laptop, NVIDIA GPU, GNOME | `bazzite-gnome-nvidia-open` |
-| HTPC/handheld (Steam Gaming Mode), GNOME, no NVIDIA | `bazzite-deck-gnome` |
-| HTPC/handheld (Steam Gaming Mode), GNOME, NVIDIA | `bazzite-deck-nvidia-gnome` |
+| Hardware / desktop | GPU | Use image |
+| --- | --- | --- |
+| Desktop/laptop, GNOME | AMD / Intel | `bazzite-gnome` |
+| Desktop/laptop, GNOME | NVIDIA 7XX–10XX | `bazzite-gnome-nvidia` |
+| Desktop/laptop, GNOME | NVIDIA 16XX or newer | `bazzite-gnome-nvidia-open` |
+| HTPC/handheld (Steam Gaming Mode), GNOME | AMD / Intel | `bazzite-deck-gnome` |
+| HTPC/handheld (Steam Gaming Mode), GNOME | NVIDIA 16XX or newer | `bazzite-deck-nvidia-gnome` |
 
 Install the **stock** Bazzite that matches: same desktop environment (GNOME) and
 same GPU vendor (NVIDIA or not), and `-deck` if you want Steam Gaming Mode.
@@ -113,21 +114,27 @@ The custom image bakes in the flatpaks and config, but the CLI toolchain
 
 ```bash
 git clone https://github.com/MargeyShah/dotfiles.git ~/.scripts
-~/.scripts/setup/fresh_install_bazzite.sh
+~/.scripts/setup/fresh_install.sh
 ```
 
 > The clone uses **HTTPS** (the repo is public) — there's no SSH key on a fresh
 > install yet; the bootstrap generates one and configures git signing.
 
-The flatpaks, GNOME extensions, Element keyring override and desktop defaults
-are already baked into the image, so the bootstrap only adds what cannot live
-there: Helium/Sidra as AppImages (via Gear Lever), the Flameshot screenshot
-portal permission, the gaming extras (EmuDeck, Decky Loader + plugins), and the
-system extras (Proton Plus, Sunshine, Wake-on-LAN, Boot-to-Windows,
-Virtualization, input group, CoolerControl, LM Studio, VSCodium). The Ubuntu
-Distrobox is provisioned with `fresh_install.sh --profile dotfiles`, which also
-symlinks the dotfiles. See the
-[dotfiles repo](https://github.com/MargeyShah/dotfiles) for details.
+On Bazzite the menu offers **1. Unix PC** (host extras + Distrobox toolchain) and
+**2. dotfiles only** (toolchain + dotfiles, no host extras).
+
+The flatpaks, GNOME extensions, Element keyring override, desktop defaults and
+CoolerControl are already baked into the image, so the bootstrap only does what
+cannot live there: it verifies `podman-docker`, installs `zsh` with Homebrew and
+makes it the login shell (`usermod -s`, since Bazzite has no `chsh`), grants
+Flameshot the screenshot portal, installs Helium/Sidra/Ghostty/Vesktop as
+AppImages via Gear Lever (Unix PC tier), runs the gaming extras (EmuDeck, Decky
+Loader + plugins) and the system extras (Wake-on-LAN, Boot-to-Windows,
+Virtualization, input group, LM Studio, VSCodium), and creates the Ubuntu
+Distrobox. The container is provisioned by re-running
+`fresh_install.sh --profile <desktop|dotfiles>` inside it, which also symlinks the
+dotfiles. See the [dotfiles repo](https://github.com/MargeyShah/dotfiles) for
+details.
 
 The bootstrap does **not** change your terminal. New terminals open a normal
 host shell; enter the container when you want it with
@@ -135,11 +142,21 @@ host shell; enter the container when you want it with
 
 ## 8. Updating from here on
 
-Nothing further to do — updates are automatic:
+Nothing further to do — updates are automatic (`uupd.timer`), and `ujust update`
+runs the same thing on demand:
 
 ```bash
-ujust update   # OS (this image) + flatpaks + distrobox containers
+ujust update   # OS (this image), flatpaks, Homebrew and Distrobox containers
 ```
 
-The image tracks upstream Bazzite automatically (daily + event-driven rebuilds).
+That **stages** the new OS deployment; reboot to switch to it (`rpm-ostree
+status` shows the pending one). If the `distrobox` module has been disabled in
+`/etc/uupd/config.json`, update containers separately:
+
+```bash
+distrobox upgrade --all
+```
+
+The image tracks upstream Bazzite automatically (hourly digest check that
+dispatches a rebuild, plus a daily cron as a safety net).
 See [Updating](README.md#updating).
