@@ -1,0 +1,73 @@
+---
+# yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
+# GNOME desktop, legacy (proprietary) NVIDIA driver: Pascal/Maxwell/Volta,
+# i.e. GTX 7XX-10XX. Use bazzite-gnome-nvidia-open for GTX 16XX (Turing)+.
+name: bazzite-gnome-nvidia
+description: MargeyShah personal Bazzite image (GNOME, legacy NVIDIA).
+base-image: ghcr.io/ublue-os/bazzite-gnome-nvidia
+image-version: stable
+
+# Policy: FLATPAK-FIRST. GUI apps ship as system flatpaks; the host is never
+# modified with dnf/copr at runtime. The rpm-ostree module keeps every layer at
+# build time: podman-docker (so the `docker` CLI targets Podman) plus the
+# CoolerControl stack (liquidctl/coolercontrol), which used to be layered by
+# `ujust install-coolercontrol` on the live host.
+modules:
+  - type: rpm-ostree
+    repos:
+      - terra.repo   # CoolerControl lives in Terra (files/rpm-ostree/terra.repo)
+    install:
+      - podman-docker
+      - liquidctl
+      - coolercontrol
+
+  - type: default-flatpaks
+    configurations:
+      - notify: true
+        scope: system
+        install:
+          - im.riot.Riot          # Element
+          - com.visualstudio.code # Visual Studio Code
+          - org.signal.Signal            # Signal Desktop
+          - com.plexamp.Plexamp            # Plexamp
+          - io.github.jeffshee.Hidamari      # Hidamari (video wallpaper)
+          - sh.ppy.osu                     # osu! (lazer)
+          - com.github.mtkennerly.ludusavi # Ludusavi (save backups)
+          - com.heroicgameslauncher.hgl    # Heroic Games Launcher
+          - it.mijorus.gearlever           # Gear Lever (AppImage manager)
+          - org.flameshot.Flameshot        # Flameshot (screenshots)
+          - com.obsproject.Studio           # OBS Studio (record/stream)
+          - com.dec05eba.gpu_screen_recorder # GPU Screen Recorder (ShadowPlay-like)
+          - com.vysp3r.ProtonPlus         # Proton Plus (Proton/Wine manager)
+          - dev.lizardbyte.app.Sunshine   # Sunshine (game streaming host)
+          - org.prismlauncher.PrismLauncher # Prism Launcher (Minecraft)
+          - info.cemu.Cemu                 # Cemu (Wii U)
+          - net.rpcs3.RPCS3                # RPCS3 (PS3)
+          - org.DolphinEmu.dolphin-emu     # Dolphin (GameCube/Wii)
+          - dev.goats.xivlauncher          # XIVLauncher (FFXIV)
+      - scope: user # Flathub user repo, no user packages forced
+
+  # GNOME Shell extensions (e.g.o PK IDs): the ones not shipped by Bazzite's
+  # system packages. Default-enabled by the gschema-overrides module below.
+  - type: gnome-extensions
+    install:
+      - 9024   # Deja Window
+      - 545    # Hide Top Bar
+      - 3843   # Just Perfection
+      - 10247  # Mute All Microphones
+      - 11144  # Native Dock
+      - 5964   # Quick Settings Audio Devices Hider
+      - 6000   # Quick Settings Audio Devices Renamer
+
+  # Default-enable the extension set (installed above + Bazzite's own).
+  - type: gschema-overrides
+    include:
+      - zz1-margey-extensions.gschema.override
+      - zz1-margey-desktop.gschema.override
+
+  - type: files
+    files:
+      - source: system
+        destination: /
+
+  - type: signing

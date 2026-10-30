@@ -32,6 +32,8 @@ modules:
           - com.heroicgameslauncher.hgl    # Heroic Games Launcher
           - it.mijorus.gearlever           # Gear Lever (AppImage manager)
           - org.flameshot.Flameshot        # Flameshot (screenshots)
+          - com.obsproject.Studio           # OBS Studio (record/stream)
+          - com.dec05eba.gpu_screen_recorder # GPU Screen Recorder (ShadowPlay-like)
           - com.vysp3r.ProtonPlus         # Proton Plus (Proton/Wine manager)
           - dev.lizardbyte.app.Sunshine   # Sunshine (game streaming host)
           - org.prismlauncher.PrismLauncher # Prism Launcher (Minecraft)
