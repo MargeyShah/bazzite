@@ -7,18 +7,24 @@ base-image: ghcr.io/ublue-os/bazzite-gnome
 image-version: stable
 
 # Policy: FLATPAK-FIRST. GUI apps ship as system flatpaks; the host is never
-# modified with dnf/copr at runtime. The rpm-ostree module keeps every layer at
+# modified with dnf/copr at runtime. The dnf module keeps every layer at
 # build time: podman-docker (so the `docker` CLI targets Podman) plus the
 # CoolerControl stack (liquidctl/coolercontrol), which used to be layered by
 # `ujust install-coolercontrol` on the live host.
+#
+# Use dnf (not rpm-ostree) for build-time layering: on Fedora 45 base images,
+# `rpm-ostree install` refuses to run inside the build container
+# ("This system was not booted via libostree").
 modules:
-  - type: rpm-ostree
+  - type: dnf
     repos:
-      - terra.repo   # CoolerControl lives in Terra (files/rpm-ostree/terra.repo)
+      files:
+        - terra.repo   # CoolerControl lives in Terra (files/dnf/terra.repo)
     install:
-      - podman-docker
-      - liquidctl
-      - coolercontrol
+      packages:
+        - podman-docker
+        - liquidctl
+        - coolercontrol
 
   - type: default-flatpaks
     configurations:

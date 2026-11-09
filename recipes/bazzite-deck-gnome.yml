@@ -7,15 +7,18 @@ base-image: ghcr.io/ublue-os/bazzite-deck-gnome
 image-version: stable
 
 # Flatpak-first; rpm layers (podman-docker, CoolerControl) are build-time only.
-# See bazzite-gnome.yml.
+# See bazzite-gnome.yml. dnf is used instead of rpm-ostree because Fedora 45
+# base images reject `rpm-ostree install` inside the build container.
 modules:
-  - type: rpm-ostree
+  - type: dnf
     repos:
-      - terra.repo   # CoolerControl lives in Terra (files/rpm-ostree/terra.repo)
+      files:
+        - terra.repo   # CoolerControl lives in Terra (files/dnf/terra.repo)
     install:
-      - podman-docker
-      - liquidctl
-      - coolercontrol
+      packages:
+        - podman-docker
+        - liquidctl
+        - coolercontrol
 
   - type: default-flatpaks
     configurations:

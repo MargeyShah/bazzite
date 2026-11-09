@@ -158,10 +158,10 @@ Flatpak-first: GUI apps come from Flathub, and RPMs are baked at build time.
     needs no manual toggling.
   - `zz1-margey-desktop.gschema.override` — window-manager defaults
     (`focus-new-windows='smart'`, `auto-raise=true`).
-- **`rpm-ostree`** — baked at build time:
+- **`dnf`** — baked at build time:
   - `podman-docker` — makes the `docker` CLI target Podman (no Docker daemon).
   - `liquidctl` + `coolercontrol` — the CoolerControl stack, from the Terra repo
-    that `files/rpm-ostree/terra.repo` enables for the build (Bazzite ships it
+    that `files/dnf/terra.repo` enables for the build (Bazzite ships it
     disabled and only turns it on at runtime for `ujust`).
 - **`files`** — `files/system/*` copied into the image root:
   - `/var/lib/flatpak/overrides/im.riot.Riot` — Element keyring access
@@ -169,7 +169,7 @@ Flatpak-first: GUI apps come from Flathub, and RPMs are baked at build time.
     needed.
   - `/usr/share/margey-image/README` — marker file.
 
-  (`files/gschema-overrides/` and `files/rpm-ostree/` are module inputs, not
+  (`files/gschema-overrides/` and `files/dnf/` are module inputs, not
   copied.)
 - **`signing`** — cosign signing policy.
 

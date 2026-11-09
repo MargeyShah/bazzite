@@ -2,7 +2,7 @@
 #
 # Bazzite ships its own copy of this file with the repo DISABLED and flips it on
 # at runtime from `ujust install-coolercontrol`. The image build needs it
-# enabled up front, so it is declared in the rpm-ostree module's `repos:` and
+# enabled up front, so it is declared in the dnf module's `repos.files:` and
 # replaces the base file at build time.
 #
 # Keys referenced below are shipped in the base image
