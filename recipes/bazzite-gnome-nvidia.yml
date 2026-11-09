@@ -19,8 +19,8 @@ image-version: stable
 modules:
   - type: dnf
     repos:
-      files:
-        - terra.repo   # CoolerControl lives in Terra (files/dnf/terra.repo)
+      enable:
+        - terra   # CoolerControl lives in Terra; Bazzite ships the repo
     install:
       packages:
         - podman-docker

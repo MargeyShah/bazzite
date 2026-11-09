@@ -161,16 +161,14 @@ Flatpak-first: GUI apps come from Flathub, and RPMs are baked at build time.
 - **`dnf`** — baked at build time:
   - `podman-docker` — makes the `docker` CLI target Podman (no Docker daemon).
   - `liquidctl` + `coolercontrol` — the CoolerControl stack, from the Terra repo
-    that `files/dnf/terra.repo` enables for the build (Bazzite ships it
-    disabled and only turns it on at runtime for `ujust`).
+    that the base image already ships enabled.
 - **`files`** — `files/system/*` copied into the image root:
   - `/var/lib/flatpak/overrides/im.riot.Riot` — Element keyring access
     (`talk-name=org.freedesktop.secrets`), so no per-user `flatpak override` is
     needed.
   - `/usr/share/margey-image/README` — marker file.
 
-  (`files/gschema-overrides/` and `files/dnf/` are module inputs, not
-  copied.)
+  (`files/gschema-overrides/` is a module input, not copied.)
 - **`signing`** — cosign signing policy.
 
 ## Build
