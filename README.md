@@ -148,13 +148,12 @@ Flatpak-first: GUI apps come from Flathub, and RPMs are baked at build time.
   - Deja Window
   - Hide Top Bar
   - Just Perfection
-  - Mute All Microphones
   - Native Dock
   - Quick Settings Audio Devices Hider
   - Quick Settings Audio Devices Renamer
 - **`gschema-overrides`** — two drop-ins:
   - `zz1-margey-extensions.gschema.override` — default-enables the full extension
-    set (Bazzite's own plus the seven above, 17 in total), so a fresh install
+    set (Bazzite's own plus the six above, 16 in total), so a fresh install
     needs no manual toggling.
   - `zz1-margey-desktop.gschema.override` — window-manager defaults
     (`focus-new-windows='smart'`, `auto-raise=true`).
