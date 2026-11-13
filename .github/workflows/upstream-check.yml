@@ -48,6 +48,7 @@ jobs:
             bazzite-gnome-nvidia-open
             bazzite-deck-gnome
             bazzite-deck-nvidia-gnome
+            bazzite-deck-nvidia
           )
           stale=()
           for name in "${images[@]}"; do

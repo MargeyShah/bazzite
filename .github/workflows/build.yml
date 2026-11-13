@@ -56,7 +56,7 @@ jobs:
             --jq "[.[].headSha] | index(\"${GITHUB_SHA}\") != null" 2>/dev/null || echo false)"
 
           stale=no
-          for name in bazzite-gnome bazzite-gnome-nvidia bazzite-gnome-nvidia-open bazzite-deck-gnome bazzite-deck-nvidia-gnome; do
+          for name in bazzite-gnome bazzite-gnome-nvidia bazzite-gnome-nvidia-open bazzite-deck-gnome bazzite-deck-nvidia-gnome bazzite-deck-nvidia; do
             upstream="$(crane digest "ghcr.io/ublue-os/${name}:stable" || true)"
             built="$(crane config "ghcr.io/margeyshah/${name}:latest" \
               | jq -r '.config.Labels["org.opencontainers.image.base.digest"] // empty' || true)"
@@ -96,6 +96,7 @@ jobs:
           - bazzite-gnome-nvidia-open.yml
           - bazzite-deck-gnome.yml
           - bazzite-deck-nvidia-gnome.yml
+          - bazzite-deck-nvidia.yml
     steps:
       # the build is fully handled by the reusable github action
       - name: Build Custom Image

@@ -1,0 +1,60 @@
+---
+# yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
+# HTPC/handheld (gamescope + KDE Plasma), NVIDIA.
+name: bazzite-deck-nvidia
+description: MargeyShah personal Bazzite image (deck + KDE Plasma, HTPC, NVIDIA).
+base-image: ghcr.io/ublue-os/bazzite-deck-nvidia
+image-version: stable
+
+# Flatpak-first; rpm layers (podman-docker, CoolerControl) are build-time only.
+# See bazzite-gnome.yml. dnf is used instead of rpm-ostree because Fedora 45
+# base images reject `rpm-ostree install` inside the build container.
+#
+# KDE/Plasma variant: there are no GNOME Shell extensions or gsettings here, so
+# the gnome-extensions / gschema-overrides modules used by the GNOME recipes are
+# intentionally absent. Ptyxis is added explicitly because the deck (KDE)
+# variants do not ship it by default.
+modules:
+  - type: dnf
+    repos:
+      enable:
+        - terra   # CoolerControl lives in Terra; Bazzite ships the repo
+    install:
+      packages:
+        - podman-docker
+        - liquidctl
+        - coolercontrol
+
+  - type: default-flatpaks
+    configurations:
+      - notify: true
+        scope: system
+        install:
+          - app.devsuite.Ptyxis        # Ptyxis (container-oriented terminal)
+          - im.riot.Riot          # Element
+          - com.visualstudio.code # Visual Studio Code
+          - org.signal.Signal            # Signal Desktop
+          - com.plexamp.Plexamp            # Plexamp
+          - io.github.jeffshee.Hidamari      # Hidamari (video wallpaper)
+          - sh.ppy.osu                     # osu! (lazer)
+          - com.github.mtkennerly.ludusavi # Ludusavi (save backups)
+          - com.heroicgameslauncher.hgl    # Heroic Games Launcher
+          - it.mijorus.gearlever           # Gear Lever (AppImage manager)
+          - org.flameshot.Flameshot        # Flameshot (screenshots)
+          - com.obsproject.Studio           # OBS Studio (record/stream)
+          - com.dec05eba.gpu_screen_recorder # GPU Screen Recorder (ShadowPlay-like)
+          - com.vysp3r.ProtonPlus         # Proton Plus (Proton/Wine manager)
+          - dev.lizardbyte.app.Sunshine   # Sunshine (game streaming host)
+          - org.prismlauncher.PrismLauncher # Prism Launcher (Minecraft)
+          - info.cemu.Cemu                 # Cemu (Wii U)
+          - net.rpcs3.RPCS3                # RPCS3 (PS3)
+          - org.DolphinEmu.dolphin-emu     # Dolphin (GameCube/Wii)
+          - dev.goats.xivlauncher          # XIVLauncher (FFXIV)
+      - scope: user
+
+  - type: files
+    files:
+      - source: system
+        destination: /
+
+  - type: signing

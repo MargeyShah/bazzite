@@ -14,6 +14,7 @@ it keeps pulling Bazzite's own updates — you just get the extra baked-in confi
 | `recipes/bazzite-gnome-nvidia-open.yml` | `ghcr.io/ublue-os/bazzite-gnome-nvidia-open` | `ghcr.io/margeyshah/bazzite-gnome-nvidia-open` | NVIDIA 16XX or newer |
 | `recipes/bazzite-deck-gnome.yml` | `ghcr.io/ublue-os/bazzite-deck-gnome` | `ghcr.io/margeyshah/bazzite-deck-gnome` | AMD / Intel |
 | `recipes/bazzite-deck-nvidia-gnome.yml` | `ghcr.io/ublue-os/bazzite-deck-nvidia-gnome` | `ghcr.io/margeyshah/bazzite-deck-nvidia-gnome` | NVIDIA 16XX or newer |
+| `recipes/bazzite-deck-nvidia.yml` | `ghcr.io/ublue-os/bazzite-deck-nvidia` | `ghcr.io/margeyshah/bazzite-deck-nvidia` | NVIDIA 16XX or newer, **KDE Plasma** |
 
 ## Setup
 
@@ -124,6 +125,8 @@ That's it. `ujust update` keeps the machine current afterwards — see
 Flatpak-first: GUI apps come from Flathub, and RPMs are baked at build time.
 
 - **`default-flatpaks`** — system GUI apps from Flathub:
+  - Ptyxis (container-oriented terminal; **KDE/Plasma variant only** — the deck
+    (KDE) image does not ship it, the GNOME images already include it)
   - Element
   - VS Code
   - Signal Desktop
@@ -143,7 +146,8 @@ Flatpak-first: GUI apps come from Flathub, and RPMs are baked at build time.
   - RPCS3 (PS3)
   - Dolphin (GameCube/Wii)
   - XIVLauncher (FFXIV)
-- **`gnome-extensions`** — installs the extensions Bazzite does not ship, pinned
+- **`gnome-extensions`** — *GNOME variants only* (not the KDE/Plasma
+  `bazzite-deck-nvidia`). Installs the extensions Bazzite does not ship, pinned
   by e.g.o PK ID:
   - Deja Window
   - Hide Top Bar
@@ -151,7 +155,8 @@ Flatpak-first: GUI apps come from Flathub, and RPMs are baked at build time.
   - Native Dock
   - Quick Settings Audio Devices Hider
   - Quick Settings Audio Devices Renamer
-- **`gschema-overrides`** — two drop-ins:
+- **`gschema-overrides`** — *GNOME variants only* (the dconf/gsettings overrides do
+  not apply to Plasma). Two drop-ins:
   - `zz1-margey-extensions.gschema.override` — default-enables the full extension
     set (Bazzite's own plus the six above, 16 in total), so a fresh install
     needs no manual toggling.

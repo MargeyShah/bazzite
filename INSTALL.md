@@ -20,15 +20,18 @@ download stock Bazzite ISO  →  flash to USB  →  install  →  rebase onto cu
 | Desktop/laptop, GNOME | NVIDIA 16XX or newer | `bazzite-gnome-nvidia-open` |
 | HTPC/handheld (Steam Gaming Mode), GNOME | AMD / Intel | `bazzite-deck-gnome` |
 | HTPC/handheld (Steam Gaming Mode), GNOME | NVIDIA 16XX or newer | `bazzite-deck-nvidia-gnome` |
+| HTPC/handheld (Steam Gaming Mode), **KDE Plasma** | NVIDIA 16XX or newer | `bazzite-deck-nvidia` |
 
-Install the **stock** Bazzite that matches: same desktop environment (GNOME) and
-same GPU vendor (NVIDIA or not), and `-deck` if you want Steam Gaming Mode.
+Install the **stock** Bazzite that matches: same desktop environment (GNOME, or
+KDE Plasma for the `bazzite-deck-nvidia` variant) and same GPU vendor (NVIDIA or
+not), and `-deck` if you want Steam Gaming Mode.
 
 ## 2. Download the stock Bazzite ISO
 
 1. Go to the [Bazzite download page](https://bazzite.gg/#image-picker).
-2. Choose: hardware, primary GPU vendor, desktop environment (**GNOME**), and
-   whether you want **Steam Gaming Mode** (the `-deck` variant, for HTPC/handheld).
+2. Choose: hardware, primary GPU vendor, desktop environment (GNOME, or **KDE
+   Plasma** for the `bazzite-deck-nvidia` variant), and whether you want **Steam
+   Gaming Mode** (the `-deck` variant, for HTPC/handheld).
 3. Download the ISO. If the direct download is slow, use a download manager
    (e.g. [Motrix](https://motrix.app/)).
 4. Optionally verify the ISO's SHA256 against the published checksum.
@@ -123,9 +126,10 @@ git clone https://github.com/MargeyShah/dotfiles.git ~/.scripts
 On Bazzite the menu offers **1. Unix PC** (host extras + Distrobox toolchain) and
 **2. dotfiles only** (toolchain + dotfiles, no host extras).
 
-The flatpaks, GNOME extensions, Element keyring override, desktop defaults and
-CoolerControl are already baked into the image, so the bootstrap only does what
-cannot live there: it verifies `podman-docker`, installs `zsh` with Homebrew and
+The flatpaks, the Element keyring override and CoolerControl are already baked
+into every image (the GNOME variants additionally bake in the GNOME extensions
+and desktop defaults; the KDE/Plasma `bazzite-deck-nvidia` variant adds Ptyxis),
+so the bootstrap only does what cannot live there: it verifies `podman-docker`, installs `zsh` with Homebrew and
 makes it the login shell (`usermod -s`, since Bazzite has no `chsh`), grants
 Flameshot the screenshot portal, installs Helium/Sidra/Ghostty/Vesktop as
 AppImages via Gear Lever (Unix PC tier), runs the gaming extras (EmuDeck, Decky
