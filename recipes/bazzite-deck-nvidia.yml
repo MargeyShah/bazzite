@@ -32,6 +32,7 @@ modules:
         install:
           - app.devsuite.Ptyxis        # Ptyxis (container-oriented terminal)
           - im.riot.Riot          # Element
+          - org.localsend.localsend_app      # LocalSend (cross-platform file share)
           - com.visualstudio.code # Visual Studio Code
           - org.signal.Signal            # Signal Desktop
           - com.plexamp.Plexamp            # Plexamp
